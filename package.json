@@ -1,0 +1,28 @@
+{
+  "name": "capstone-c23-pc717-backend",
+  "version": "1.0.0",
+  "description": "repository capstone project bangkit untuk backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MHMMDDzaki/capstone-c23-pc717-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MHMMDDzaki/capstone-c23-pc717-backend/issues"
+  },
+  "homepage": "https://github.com/MHMMDDzaki/capstone-c23-pc717-backend#readme",
+  "dependencies": {
+    "@google-cloud/firestore": "^6.6.0",
+    "@hapi/hapi": "^21.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
