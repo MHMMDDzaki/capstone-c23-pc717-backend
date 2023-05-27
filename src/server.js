@@ -15,6 +15,18 @@
 
 // init();
 const Firestore = require('@google-cloud/firestore');
+// const Cloud = require('@google-cloud/storage');
+// const bucketKey = 'bucketKey.json';
+
+// const util = require('util')
+// const gc = require('./config/')
+// const bucket = gc.bucket('all-mighti')
+
+// const { Storage } = Cloud
+// const storage = new Storage({
+//   keyFilename: bucketKey,
+//   projectId: 'capstone-project-c23pc717',
+// })
 
 const db = new Firestore({
   projectId: 'capstone-project-c23pc717',
@@ -23,13 +35,13 @@ const db = new Firestore({
 
 // read data
 async function readData(databases) {
-  const tester = await databases.collection('users').get();
+  const tester = await databases.collection('history').get();
   tester.forEach((doc) => {
     console.log(doc.id, '=>', doc.data());
   });
 }
 
-// readData(db)
+readData(db)
 
 // add data
 async function addData(database) {
@@ -41,7 +53,7 @@ async function addData(database) {
   });
 }
 
-addData(db)
+// addData(db)
 
 function makeid(length) {
   let result = '';
@@ -56,6 +68,21 @@ function makeid(length) {
 }
 
 // console.log(makeid(8));
+
+const {Storage} = require('@google-cloud/storage');
+
+// Creates a client
+const storage = new Storage();
+
+async function uploadFromMemory() {
+  await storage.bucket(bucketName).file(destFileName).save(contents);
+
+  console.log(
+    `${destFileName} with contents ${contents} uploaded to ${bucketName}.`
+  );
+}
+
+uploadFromMemory().catch(console.error);
 
 // tester.get().then(doc => {
 //   const data = doc.data();
