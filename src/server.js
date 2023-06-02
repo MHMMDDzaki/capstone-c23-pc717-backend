@@ -41,7 +41,7 @@ async function readData(databases) {
   });
 }
 
-readData(db)
+// readData(db)
 
 // add data
 async function addData(database) {
@@ -69,11 +69,20 @@ function makeid(length) {
 
 // console.log(makeid(8));
 
+// The ID of your GCS bucket
+const bucketName = 'bucket-c23pc717';
+
+// The contents that you want to upload
+const contents = 'these are my contents';
+
+// The new ID for your GCS file
+const destFileName = 'your-new-file-name';
+
+
 const {Storage} = require('@google-cloud/storage');
 
 // Creates a client
 const storage = new Storage();
-
 async function uploadFromMemory() {
   await storage.bucket(bucketName).file(destFileName).save(contents);
 
