@@ -69,29 +69,39 @@ function makeid(length) {
 
 // console.log(makeid(8));
 
-// The ID of your GCS bucket
+const { Storage } = require('@google-cloud/storage');
+const path = require('path');
+
+// Instantiate a storage client
+const storage = new Storage({
+  keyFilename: path.join(__dirname, '../bucketKey.json'), // Path to your service account JSON file
+  projectId: 'capstone-project-c23pc717', // Your Google Cloud project ID
+});
+
+// Define your bucket name
 const bucketName = 'bucket-c23pc717';
 
-// The contents that you want to upload
-const contents = 'these are my contents';
+// Function to upload a file to Google Cloud Storage
+async function uploadFile(filename) {
+  try {
+    // Upload options
+    const options = {
+      destination: filename, // Destination file path in the bucket
+    };
 
-// The new ID for your GCS file
-const destFileName = 'your-new-file-name';
+    // Upload the file
+    await storage.bucket(bucketName).upload(filename, options);
 
-
-const {Storage} = require('@google-cloud/storage');
-
-// Creates a client
-const storage = new Storage();
-async function uploadFromMemory() {
-  await storage.bucket(bucketName).file(destFileName).save(contents);
-
-  console.log(
-    `${destFileName} with contents ${contents} uploaded to ${bucketName}.`
-  );
+    console.log(`File ${filename} uploaded to ${bucketName}`);
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  }
 }
 
-uploadFromMemory().catch(console.error);
+// Usage example
+const filename = 'assets/dummy.txt'; // Path to the file you want to upload
+uploadFile(filename);
+
 
 // tester.get().then(doc => {
 //   const data = doc.data();
