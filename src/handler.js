@@ -1,6 +1,24 @@
 const { nanoid } = require('nanoid')
 const user = require('./user')
 const history = require('./history')
+const Firestore = require('@google-cloud/firestore')
+
+const db = new Firestore({
+  projectId: 'capstone-project-c23pc717',
+  keyFilename: 'keyfile.json',
+});
+
+function makeid(length) {
+  let result = 'user-';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
 
 const addUser = (request, h) => {
   const {
@@ -55,10 +73,19 @@ const addUser = (request, h) => {
     return response
   }
 
+  async function addData(database) {
+    const docRef = database.collection('users').doc(makeid(5));
+    await docRef.set({
+      username: newUser.username,
+      password: newUser.password,
+      userID: newUser.userID
+    });
+  }
   user.push(newUser)
 
   const isSuccess = user.filter((user) => user.userID === userID).length > 0
   if (isSuccess) {
+    addData(db)
     const response = h
       .response({
         status: 'success',
@@ -73,14 +100,14 @@ const addUser = (request, h) => {
   }
 }
 
-const connected = (request,h) => {
+const connected = (request, h) => {
   const response = h
     .response({
       status: 'success',
       data: "Hello World"
     })
     .code(200)
-  return response    
+  return response
 }
 
 const getAllUser = (request, h) => {
