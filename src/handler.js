@@ -1,13 +1,12 @@
 const { nanoid } = require('nanoid')
 const user = require('./user')
 const history = require('./history')
-const Firestore = require('@google-cloud/firestore')
+// const Firestore = require('@google-cloud/firestore')
 
-const db = new Firestore({
-  projectId: 'capstone-project-c23pc717',
-  keyFilename: 'keyfile.json'
-})
-
+// const db = new Firestore({
+//   projectId: 'capstone-project-c23pc717',
+//   keyFilename: 'keyfile.json'
+// })
 
 const addUser = (request, h) => {
   const {
