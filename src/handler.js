@@ -1,20 +1,20 @@
 const { nanoid } = require('nanoid')
-const user = require('./user')
+// const user = require('./user')
 const history = require('./history')
-// const Firestore = require('@google-cloud/firestore')
+const Firestore = require('@google-cloud/firestore')
 
-// const db = new Firestore({
-//   projectId: 'capstone-project-c23pc717',
-//   keyFilename: 'keyfile.json'
-// })
+const db = new Firestore({
+  projectId: 'capstone-project-c23pc717',
+  keyFilename: 'keyfile.json'
+})
 
-const addUser = (request, h) => {
+const addUser = async (request, h, database = db) => {
   const {
     username,
     password
   } = request.payload
 
-  const userID = 'user' + nanoid(10)
+  let userID = 'user' + nanoid(10)
 
   const newUser = {
     userID,
@@ -22,7 +22,18 @@ const addUser = (request, h) => {
     password
   }
 
-  const usernameCheck = user.filter((user) => user.username === username)[0]
+  const temp = []
+  const tempValidate = await database.collection('users').get()
+  tempValidate.forEach((doc) => {
+    temp.push(doc.data())
+  })
+
+  // condition for checking duplicate user id
+  if (temp.includes(userID)) {
+    userID = 'user' + nanoid(10)
+  }
+
+  const usernameCheck = temp.filter(user => user.username === username)[0]
 
   if (usernameCheck !== undefined) {
     const response = h
@@ -61,29 +72,22 @@ const addUser = (request, h) => {
     return response
   }
 
-  // async function addData (database) {
-  //   let naming = 'user' + nanoid(10)
-  //   const temp = []
-  //   const tempValidate = await database.collection('users').get()
-  //   tempValidate.forEach((doc) => {
-  //     temp.push(doc.data())
-  //   })
-  //   // condition for checking duplicate user id
-  //   if (temp.includes(naming)) {
-  //     naming = 'user' + nanoid(10)
-  //   }
-  //   const docRef = database.collection('users').doc(naming)
-  //   await docRef.set({
-  //     username: newUser.username,
-  //     password: newUser.password,
-  //     userID: newUser.userID
-  //   })
-  // }
-  user.push(newUser)
+  const docRef = database.collection('users').doc(userID)
 
-  const isSuccess = user.filter((user) => user.userID === userID).length > 0
+  await docRef.set({
+    username: newUser.username,
+    password: newUser.password,
+    userID: newUser.userID
+  })
+
+  temp.push({
+    username: newUser.username,
+    password: newUser.password,
+    userID: newUser.userID
+  })
+
+  const isSuccess = temp.filter(user => user.userID === userID).length > 0
   if (isSuccess) {
-    // addData(db)
     const response = h
       .response({
         status: 'success',
@@ -108,16 +112,14 @@ const connected = (request, h) => {
   return response
 }
 
-const getAllUser = (request, h) => {
-  // async function getUserFirestore(database) {
-  //   const tester = await database.collection('users').get()
-  //   const temp = []
-  //   tester.forEach((doc) => {
-  //     console.log(doc.id, '=>', doc.data())
-  //     temp.push
-  //   });
-  // }
-  const userData = user.map((user) => {
+const getAllUser = async (request, h, database = db) => {
+  const fireData = await database.collection('users').get()
+  const temp = []
+  fireData.forEach((doc) => {
+    // push data from firestore to temp
+    temp.push(doc.data())
+  })
+  const userData = temp.map(user => {
     return {
       userID: user.userID,
       username: user.username
@@ -135,10 +137,16 @@ const getAllUser = (request, h) => {
   return response
 }
 
-const getUserById = (request, h) => {
+const getUserById = async (request, h, database = db) => {
   const { userID } = request.params
-  const users = user.filter((b) => b.userID === userID)[0]
-  if (users !== undefined) {
+
+  const temp = []
+  const tempFireData = await database.collection('users').get()
+  tempFireData.forEach((doc) => {
+    temp.push(doc.data())
+  })
+  const user = temp.filter(user => user.userID === userID)[0]
+  if (user !== undefined) {
     const response = h
       .response({
         status: 'success',
