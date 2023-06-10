@@ -1,4 +1,4 @@
-const { addUser, getAllUser, getUserById, addHistory, getAllHistory } = require('./handler')
+const { addUser, getAllUser, getUserById, addHistory, getAllHistory, getHistoryById } = require('./handler')
 
 const routes = [
   {
@@ -25,6 +25,11 @@ const routes = [
     method: 'GET',
     path: '/history',
     handler: getAllHistory
+  },
+  {
+    method: 'GET',
+    path: '/history/{id}',
+    handler: getHistoryById
   }
 ]
 

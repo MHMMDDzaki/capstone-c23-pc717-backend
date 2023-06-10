@@ -118,14 +118,16 @@ const getUserById = (request, h) => {
 const addHistory = (request, h) => {
   const {
     imageLink,
-    postdesc
+    postdesc,
+    userReference
   } = request.payload
 
   const uploadDate = new Date()
 
-  const userReference = 'abc'
+  const id = nanoid(16)
 
   const newHistory = {
+    id,
     imageLink,
     postdesc,
     userReference,
@@ -149,6 +151,7 @@ const addHistory = (request, h) => {
       status: 'success',
       message: 'Data berhasil ditambahkan',
       data: {
+        id,
         imageLink,
         postdesc,
         uploadDate,
@@ -180,10 +183,34 @@ const getAllHistory = (request, h) => {
   return response
 }
 
+const getHistoryById = (request, h) => {
+  const { id } = request.params
+  const historyData = history.filter((b) => b.id === id)[0]
+  if (historyData !== undefined) {
+    const response = h
+      .response({
+        status: 'success',
+        data: {
+          historyData
+        }
+      })
+      .code(200)
+    return response
+  }
+  const response = h
+    .response({
+      status: 'fail',
+      message: 'History tidak ditemukan'
+    })
+    .code(404)
+  return response
+}
+
 module.exports = {
   addUser,
   getAllUser,
   getUserById,
   addHistory,
-  getAllHistory
+  getAllHistory,
+  getHistoryById
 }
