@@ -73,6 +73,16 @@ const addUser = (request, h) => {
   }
 }
 
+const connected = (request,h) => {
+  const response = h
+    .response({
+      status: 'success',
+      data: "Hello World"
+    })
+    .code(200)
+  return response    
+}
+
 const getAllUser = (request, h) => {
   const userData = user.map((user) => {
     return {
@@ -212,5 +222,9 @@ module.exports = {
   getUserById,
   addHistory,
   getAllHistory,
+<<<<<<< HEAD
   getHistoryById
+=======
+  connected
+>>>>>>> b0329ec033fbc553fd2572ea7632c59191683a93
 }
