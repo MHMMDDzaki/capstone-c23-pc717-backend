@@ -73,14 +73,14 @@ const addUser = (request, h) => {
   }
 }
 
-const connected = (request,h) => {
+const connected = (request, h) => {
   const response = h
     .response({
       status: 'success',
-      data: "Hello World"
+      data: 'Hello World'
     })
     .code(200)
-  return response    
+  return response
 }
 
 const getAllUser = (request, h) => {
@@ -216,15 +216,91 @@ const getHistoryById = (request, h) => {
   return response
 }
 
+const updateHistory = (request, h) => {
+  const { id } = request.params
+
+  const { imageLink, postdesc } = request.payload
+  const updateDate = new Date().toISOString()
+  const historydata = history.findIndex((b) => b.id === id)
+
+  if (historydata !== -1) {
+    history[historydata] = {
+      ...history[historydata],
+      imageLink,
+      postdesc,
+      updateDate
+    }
+    const response = h.response({
+      status: 'success',
+      message: 'Data berhasil diperbarui'
+    })
+    response.code(200)
+    return response
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Gagal memperbarui data. Id tidak ditemukan'
+  })
+  response.code(404)
+  return response
+}
+
+const deleteHistory = (request, h) => {
+  const { id } = request.params
+
+  const historyData = history.findIndex((b) => b.id === id)
+
+  if (historyData !== -1) {
+    history.splice(historyData, 1)
+    const response = h.response({
+      status: 'success',
+      message: 'Data berhasil dihapus'
+    })
+    response.code(200)
+    return response
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Data gagal dihapus. Id tidak ditemukan'
+  })
+  response.code(404)
+  return response
+}
+
+const deleteUser = (request, h) => {
+  const { userid } = request.params
+
+  const userData = user.findIndex((b) => b.id === userid)
+
+  if (userData !== -1) {
+    user.splice(userData, 1)
+    const response = h.response({
+      status: 'success',
+      message: 'User berhasil dihapus'
+    })
+    response.code(200)
+    return response
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'User gagal dihapus. Id tidak ditemukan'
+  })
+  response.code(404)
+  return response
+}
+
 module.exports = {
   addUser,
   getAllUser,
   getUserById,
   addHistory,
   getAllHistory,
-<<<<<<< HEAD
-  getHistoryById
-=======
+  getHistoryById,
+  updateHistory,
+  deleteHistory,
+  deleteUser,
   connected
->>>>>>> b0329ec033fbc553fd2572ea7632c59191683a93
 }

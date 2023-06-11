@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const { addUser, getAllUser, getUserById, addHistory, getAllHistory, getHistoryById } = require('./handler')
-=======
-const { addUser, getAllUser, getUserById, addHistory, getAllHistory, connected } = require('./handler')
->>>>>>> b0329ec033fbc553fd2572ea7632c59191683a93
+const { addUser, getAllUser, getUserById, addHistory, getAllHistory, getHistoryById, updateHistory, deleteUser, deleteHistory, connected } = require('./handler')
 
 const routes = [
   {
@@ -39,6 +35,21 @@ const routes = [
     method: 'GET',
     path: '/history/{id}',
     handler: getHistoryById
+  },
+  {
+    method: 'PUT',
+    path: '/history/{id}',
+    handler: updateHistory
+  },
+  {
+    method: 'DELETE',
+    path: '/user/{userID}',
+    handler: deleteUser
+  },
+  {
+    method: 'DELETE',
+    path: '/history/{id}',
+    handler: deleteHistory
   }
 ]
 
